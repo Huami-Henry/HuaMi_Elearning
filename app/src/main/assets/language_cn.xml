@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="upgrade_software">软件版本更新</array>
+    <array name="current_version">当前版本</array>
+    <array name="recent_version">最新版本</array>
+    <array name="check_later">以后再说</array>
+    <array name="down_now">开始下载</array>
+    <array name="updating">更新中...</array>
+    <array name="go_update">去更新</array>
+    <array name="media_update_reminder">媒资更新提醒</array>
+    <array name="update_media_documents">媒资更新提醒</array>
+    <array name="make_sure_back">确定要退出下载媒资页面么?</array>
+    <array name="back_reminder">退出提醒</array>
+    <array name="sure_back">确认退出</array>
+    <array name="continue_download">继续下载</array>
+    <array name="detecting_media_files">正在检测需要更新的媒资文件</array>
+</resources>

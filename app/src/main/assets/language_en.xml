@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="upgrade_software">Software Version Upgrade</array>
+    <array name="current_version">Current Version</array>
+    <array name="recent_version">Latest Version</array>
+    <array name="check_later">Do Later</array>
+    <array name="down_now">Download Start</array>
+    <array name="updating">Updating...</array>
+    <array name="go_update">Go Update</array>
+    <array name="update_media_documents">There is a need to update the media documents</array>
+    <array name="media_update_reminder">Media Update Reminder</array>
+    <array name="make_sure_back">Make sure you exit the download interface</array>
+    <array name="back_reminder">Exit Reminder</array>
+    <array name="sure_back">Confirm Exit</array>
+    <array name="continue_download">Continue Download</array>
+    <array name="detecting_media_files">Detecting media files that need to be updated</array>
+</resources>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.huami.elearning">
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <permission
+        android:name="com.huami.elearning.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+    <!-- Required  一些系统要求的权限，如访问网络等 -->
+    <uses-permission android:name="com.huami.elearning.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <application
+        android:name=".TApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/elearning_logo"
+        android:label="@string/app_name"
+        android:persistent="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="landscape" />
+
+        <service android:name=".service.MainHeartbeatService" />
+        <service android:name=".service.XmlToFileService" />
+        <service android:name=".service.DownloadMediaServices" />
+        <service android:name=".service.TimeServices" />
+        <service android:name=".service.FeedBackServices" />
+        <service android:name=".service.RecordService" />
+        <service android:name=".service.DownTemplateService" />
+        <service android:name=".service.MyServiceNet" />
+        <service android:name=".service.Net_Service" />
+
+        <receiver android:name=".service.BootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- <category android:name="android.intent.category.HOME" /> -->
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".LoadingActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DownLoadActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".activity.UpMediaActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:screenOrientation="landscape"
+            ></activity>
+    </application>
+
+</manifest>
