@@ -337,12 +337,13 @@ public class XmlSqlTool {
 	 * @param state 0 (默认)代表没有下载  1代表下载完成
 	 */
 	public void updateXmlState(String xml_url,int state) {
+		Log.e("我的更新", xml_url + "---->" + state);
 		try {
 			SQLiteDatabase database = dbHelper.getWritableDatabase();
 			String sql = "update "+XmlHelper.TB_NAME+" set xml_down_state="+state+" where xml_url='"+xml_url+"' and xml_down_state=0";
 			database.execSQL(sql);
 		} catch (Exception e) {
-
+			Log.e("我的汇报", e.getMessage());
 		}
 	}
 	/**

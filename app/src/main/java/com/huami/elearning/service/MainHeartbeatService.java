@@ -91,6 +91,8 @@ public class MainHeartbeatService extends Service implements BaseNetDataBiz.Requ
                         new TemporaryInfo(info.getTemplate_id(),info.getKey_only(),info.getValue());
                 TemporarySqlTool.getInstance().insertInfo(playInfo);
             }
+            shakeListInfos.clear();
+            shakeListInfos = null;
         }
     }
     private void setTemplate() {
@@ -105,6 +107,8 @@ public class MainHeartbeatService extends Service implements BaseNetDataBiz.Requ
                                 0,0);
                 TemplateSqlTool.getInstance().insertInfo(playInfo);
             }
+            templateBoxInfos.clear();
+            templateBoxInfos = null;
         }
     }
     /**
@@ -122,12 +126,14 @@ public class MainHeartbeatService extends Service implements BaseNetDataBiz.Requ
                                 0,
                                 info.getPri()
                         );
-                Log.e("我得到的结果", info_xml.toString());
                 xmlDownInfos.add(info_xml);
             }
             if (xmlDownInfos.size() != 0) {
                 //将获得的xml数据保存到数据库中
                 XmlSqlTool.getInstance(TApplication.getContext()).insertInfos(xmlDownInfos);
+                xmlDownInfos.clear();
+                boxDownList.clear();
+                boxDownList = null;
             }
         } else {
             Toast.makeText(this, "盒子已被注销", Toast.LENGTH_SHORT).show();

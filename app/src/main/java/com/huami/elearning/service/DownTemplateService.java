@@ -1,7 +1,10 @@
 package com.huami.elearning.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -56,8 +59,23 @@ public class DownTemplateService extends Service{
     private class MyTimerTask extends TimerTask {
         @Override
         public void run() {
-            handler.sendEmptyMessage(0);
+            if (isNetworkConnected()) {
+                handler.sendEmptyMessage(0);
+            }
         }
+    }
+    /**
+     * 检查网络链接状态
+     * @return
+     */
+    public boolean isNetworkConnected() {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) TApplication.getContext()
+                .getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (mNetworkInfo != null) {
+            return mNetworkInfo.isAvailable();
+        }
+        return false;
     }
     private int teplate_id;
     private Handler handler = new Handler(){
@@ -112,7 +130,6 @@ public class DownTemplateService extends Service{
                         TemplateSqlTool.getInstance().updateDownState(id, 2);
                         downSuccessRender(id);
                         boolean empty = TemporarySqlTool.getInstance().checkEmpty(teplate_id);
-                        Log.e("我的模板是否为空", "--->" + empty);
                         if (empty) {
                             ZipUtil.upzipFile(response.body(),compress,handler_zip,true);
                         }

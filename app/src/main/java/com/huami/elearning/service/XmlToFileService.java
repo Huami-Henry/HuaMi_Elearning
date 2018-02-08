@@ -10,7 +10,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Xml;
 import com.huami.elearning.TApplication;
+import com.huami.elearning.acceptNet.BaseNetDataBiz;
 import com.huami.elearning.acceptNet.OkHttp;
+import com.huami.elearning.activity.HomeActivity;
 import com.huami.elearning.base.BaseConsts;
 import com.huami.elearning.db.FileDownSqlTool;
 import com.huami.elearning.db.XmlSqlTool;
@@ -20,9 +22,14 @@ import com.huami.elearning.model.XmlDownInfo;
 import com.huami.elearning.model.XmlDownList;
 import com.huami.elearning.util.CheckDisk;
 import com.huami.elearning.util.DownUtil;
+import com.huami.elearning.util.LanguageManager;
+import com.huami.elearning.util.SPCache;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +57,6 @@ public class XmlToFileService extends Service implements Callback{
             String fileOut = downXml(response, split[split.length - 1]);
             XmlDownList list = xmlParser(fileOut);
             for (XmlAsset asset : list.getAsset()) {
-                Log.e("我的xml文件信息", asset.toString());
                 long contentLength = 0;
                 FileDownInfo info_down=new FileDownInfo(
                         asset.getAsset_id(),
@@ -60,17 +66,14 @@ public class XmlToFileService extends Service implements Callback{
                         asset.getAsset_type(),
                         downInfo.getXml_pri(),
                         contentLength,0,list.getDownId(),0,0
-                        );
+                );
                 FileDownSqlTool.getInstance().insertInfo(info_down);
             }
             XmlSqlTool.getInstance(TApplication.getContext()).updateXmlState(downInfo.getXml_url(), 1);
-            List<FileDownInfo> maxPris = FileDownSqlTool.getInstance().getMaxPris(0);
-            if (maxPris.size() > 0) {
-                //提醒媒资需要更新
-                Intent intent = new Intent();
-                intent.setAction(BaseConsts.BROAD_UPDATE);
-                sendBroadcast(intent);
-            }
+            //提醒媒资需要更新
+            Intent intent = new Intent();
+            intent.setAction(BaseConsts.BROAD_UPDATE);
+            sendBroadcast(intent);
         } catch (IOException e) {
 
         }
@@ -92,7 +95,6 @@ public class XmlToFileService extends Service implements Callback{
         return fileOut;
     }
 
-    //    private static final long INTERVAL = 40 * 1000* 60;
     private static final long INTERVAL = 5 * 1000;
     private Handler handler = new Handler();
     private Timer mTimer;
@@ -115,13 +117,37 @@ public class XmlToFileService extends Service implements Callback{
     private class MyTimerTask extends TimerTask {
         @Override
         public void run() {
-            handler.post(runnable);
+            if (isNetworkConnected()) {
+                handler.post(runnable);
+            }
         }
     }
     private List<XmlDownInfo> priMaxInfos;
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            //xml汇报
+            List<XmlDownInfo> feedBacks= XmlSqlTool.getInstance(TApplication.getContext()).getPriDownloadInfos(1);
+            for (XmlDownInfo info : feedBacks) {
+                OkHttp.asyncPost(BaseConsts.HEART_BOXFLAG + "?mac=" + BaseConsts.BOX_MAC + "&downId=" + info.getDownBoxId(), info.getDownBoxId(), new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                    }
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        String json = response.body().string();
+                        int down_id = (int) response.request().tag();
+                        try {
+                            JSONObject object = new JSONObject(json);
+                            int code = object.getInt("code");
+                            if (code == 0) {
+                                XmlSqlTool.getInstance(TApplication.getContext()).updateXmlRenderState(down_id);
+                            }
+                        } catch (JSONException e) {
+                        }
+                    }
+                });
+            }
             //获取数据库的数据优先级高的先获取
             priMaxInfos = XmlSqlTool.getInstance(TApplication.getContext()).getPriMaxInfos(0);
             if (priMaxInfos.size() != 0) {
@@ -132,10 +158,13 @@ public class XmlToFileService extends Service implements Callback{
                 if (isNetworkConnected()) {
                     //下载xml 并且获取内部的数据
                     for (XmlDownInfo info : priMaxInfos) {
-                        Log.e("我的步骤", "开始解析xml-->"+info.getXml_url());
-                        OkHttp.asyncPost(BaseConsts.BASE_URL + info.getXml_url(),info,XmlToFileService.this);
+                        OkHttp.asyncPost(BaseConsts.BASE_URL + info.getXml_url(), info, XmlToFileService.this);
                     }
                 }
+            } else {
+                Intent intent = new Intent();
+                intent.setAction(BaseConsts.BROAD_UPDATE);
+                sendBroadcast(intent);
             }
         }
     };

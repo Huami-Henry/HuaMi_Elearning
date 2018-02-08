@@ -273,21 +273,17 @@ public class UpMediaActivity extends BaseActivity implements FileDownListener{
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.CHINA);
     public void doSuccess(FileDownInfo file_info) {
         try {
-            Log.e("我的fileName",file_info.toString());
+            describes.remove(file_info);
             String path = DownUtil.getFilePath(file_info.getFile_type())+file_info.getFile_name();
-            Log.e("执行到着了么", "获取路径");
             FileInfo info = new FileInfo(
                     file_info.getAssert_id(),
                     file_info.getFile_url(), file_info.getFile_name(), file_info.getFile_type(), path, 0, format.format(new Date()));
             FileSqlTool.getInstance().insertFile(info);
-            Log.e("执行到着了么", "是的执行到了");
             Map<String, String> map = new HashMap<>();
             map.put("mac", BaseConsts.BOX_MAC);
             map.put("assetId", String.valueOf(file_info.getAssert_id()));
             map.put("downId", String.valueOf(file_info.getDown_id()));
-
             FileDownSqlTool.getInstance().updateDownState(file_info.getFile_url(),1);
-
             OkHttp.asyncPost(BaseConsts.HEART_FILEFLAG, map, file_info.getFile_name() + file_info.getAssert_id() + file_info.getDown_id(), new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
@@ -319,7 +315,6 @@ public class UpMediaActivity extends BaseActivity implements FileDownListener{
     private void checkEmpty(TemporaryInfo info) {
         //3检查临时表中的t_id是否为空
         boolean empty = TemporarySqlTool.getInstance().checkEmpty(info.getTemplate_id());
-        Log.e("临时模板是否为空","--->"+empty);
         //设置模板表的状态
         //查看模板表的下载情况和解压情况
         if (empty) {
@@ -327,7 +322,6 @@ public class UpMediaActivity extends BaseActivity implements FileDownListener{
             //当下载状态为0
             TemplateInfo fileInfo = TemplateSqlTool.getInstance().getFileInfo(info.getTemplate_id());
             if (fileInfo != null) {
-                Log.e("临时模板是否为空","--->"+fileInfo.toString());
                 id = fileInfo.getId();
                 if (downState == 0 || downState == 1) {
                     String path = CheckDisk.checkState();
@@ -348,8 +342,8 @@ public class UpMediaActivity extends BaseActivity implements FileDownListener{
             }
         } else {
             if (task != null) {
-                boolean have = task.haveNoAsset();
-                if (!have) {
+                boolean haveNo = task.haveNoAsset();
+                if (haveNo) {
                     //1：继续检测是否有新的媒资需要下载
                     boolean b = checkNewAsset();
                     if (b) {
@@ -428,7 +422,6 @@ public class UpMediaActivity extends BaseActivity implements FileDownListener{
      * @param name
      */
     public void downZip(final int id, final int templateId, String url, final String folder, String name, final String compress) {
-        Log.e("我的操作", "--->开始下载模板" + url + "-->" + folder + "--->" + name);
         OkGo.<File>get(url)//
                 .tag(this)//
                 .headers("header1", "headerValue1")//

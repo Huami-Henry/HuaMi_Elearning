@@ -59,7 +59,7 @@ public class LanguageManager {
         en_language.put("update_media_documents", "There is a need to update the media documents");
         en_language.put("make_sure_back", "Make sure you exit the download interface");
         en_language.put("back_reminder", "Exit Reminder");
-        cn_language.put("make_sure_back_elearning", "Are you sure you want to quit E_learning?");
+        en_language.put("make_sure_back_elearning", "Are you sure you want to quit E_learning?");
         en_language.put("sure_back", "Confirm Exit");
         en_language.put("cancel_back", "Cancel");
         en_language.put("continue_download", "Continue Download");
@@ -67,7 +67,7 @@ public class LanguageManager {
         en_language.put("restart_detecting_media_files", "Down Over,Detecting media files that need to be updated");
         en_language.put("device_exception", "Device Exception！");
         en_language.put("current_net_speed", "Current Speed");
-        cn_language.put("need_to_return_ok", "Do you need to return to the home page for download?");
+        en_language.put("need_to_return_ok", "Do you need to return to the home page for download?");
     }
     public String getLanguageTip(String key,String type){
         try {

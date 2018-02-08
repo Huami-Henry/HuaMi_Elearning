@@ -58,7 +58,6 @@ public class FeedBackServices extends Service implements BaseNetDataBiz.RequestL
                         int code = object.getInt("code");
                         int down_id = Integer.valueOf(tag.split(",")[1]);
                         if (code == 0) {
-                            Log.e("我的上传结果HEART_BOXFLAG", "成功");
                             XmlSqlTool.getInstance(TApplication.getContext()).updateXmlRenderState(down_id);
                         }
                     } catch (JSONException e) {
@@ -69,10 +68,8 @@ public class FeedBackServices extends Service implements BaseNetDataBiz.RequestL
                     try {
                         JSONObject object = new JSONObject(json);
                         int code = object.getInt("code");
-                        int asset_id = Integer.valueOf(tag.split(",")[1].split("_")[1]);
                         if (code == 0) {
                             Log.e("我的上传结果HEART_FILEFLAG", "成功");
-//                            FileSqlTool.getInstance().updateFileRenderState(asset_id);
                             FeedBackSqlTool.getInstance().updateFeedState(tag.split(",")[1],1);
                         }
                     } catch (JSONException e) {
@@ -93,14 +90,14 @@ public class FeedBackServices extends Service implements BaseNetDataBiz.RequestL
         public void run() {
             //xml汇报
             List<XmlDownInfo> feedBacks= XmlSqlTool.getInstance(TApplication.getContext()).getPriDownloadInfos(1);
+
             for (XmlDownInfo info : feedBacks) {
-                Log.e("我的汇报资源xml", info.toString());
-                biz.downloadFile(BaseConsts.HEART_BOXFLAG+"?mac="+BaseConsts.BOX_MAC+"&downId="+info.getDownBoxId(),BaseConsts.HEART_BOXFLAG+","+info.getDownBoxId());
+                Log.e("我的xml汇报", feedBacks.toString());
+                biz.downloadFile(BaseConsts.HEART_BOXFLAG + "?mac=" + BaseConsts.BOX_MAC + "&downId=" + info.getDownBoxId(), BaseConsts.HEART_BOXFLAG + "," + info.getDownBoxId());
             }
             //媒资文件汇报
             List<FeedBackInfo> renderData = FeedBackSqlTool.getInstance().getRenderData(0);
             for (FeedBackInfo info : renderData) {
-                Log.e("我的汇报资源file", info.toString());
                 String assetId = info.getFeed_down_id().split("_")[1];
                 biz.downloadFile(BaseConsts.HEART_FILEFLAG+"?mac="+BaseConsts.BOX_MAC+"&assetId="+assetId+"&downId="+info.getFeed_down_id().split("_")[0],BaseConsts.HEART_FILEFLAG+","+info.getFeed_down_id());
             }

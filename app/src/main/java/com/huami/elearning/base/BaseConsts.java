@@ -17,8 +17,8 @@ public class BaseConsts {
     public static final String HEART_FILEFLAG = BASE_URL+"/box/addBoxDownSuccess";//    参数：mac、assetId、downId   下载一个媒质成功
     public static final String ClickLog = BASE_URL+"/boxclicklogdetail/addBoxClickLogDetail";//    参数：record json
     public static final String TEMPLATE_FEED = BASE_URL+"/tempLateBox/updateTemplateBoxFlag";//mac=12345678&templateId=1"    参数：record json
-//    public static final String BOX_MAC = CheckDisk.getMacAddress();
-    public static final String BOX_MAC = "50F0D3C1B5B9";
+    public static final String BOX_MAC = CheckDisk.getMacAddress();
+//    public static final String BOX_MAC = "50F0D3C1B5B9";
 //    public static final String BOX_MAC = "B84D5685FC99";
     public static final String TEMPLATE_PATH = "template";
     public static final String TEMPLATE_XML_PATH = "template_xml";

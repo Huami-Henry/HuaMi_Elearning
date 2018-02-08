@@ -1,6 +1,5 @@
 package com.huami.elearning.ui;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,12 +17,12 @@ public class OpenFileUtil {
      * 打开ppt
      * @param path
      */
-    public static Intent OpenPPt(String path){
+    public static Intent OpenPPt(String path) throws Exception{
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("OpenMode", "ReadMode");
-        bundle.putBoolean("ClearBuffer", true);
-        bundle.putBoolean("ClearTrace", true);
+//        bundle.putBoolean("ClearBuffer", true);
+//        bundle.putBoolean("ClearTrace", true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(android.content.Intent.ACTION_VIEW);
         intent.setClassName(packageName, className);

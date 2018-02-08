@@ -35,9 +35,11 @@ import com.huami.elearning.base.BaseActivity;
 import com.huami.elearning.base.BaseConsts;
 import com.huami.elearning.db.RecordSqlTool;
 import com.huami.elearning.db.TemplateSqlTool;
+import com.huami.elearning.db.XmlSqlTool;
 import com.huami.elearning.model.APPVersionInfo;
 import com.huami.elearning.model.RecordInfo;
 import com.huami.elearning.model.TemplateInfo;
+import com.huami.elearning.model.XmlDownInfo;
 import com.huami.elearning.service.DownTemplateService;
 import com.huami.elearning.service.FeedBackServices;
 import com.huami.elearning.service.MainHeartbeatService;
@@ -53,6 +55,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 public class MainActivity extends BaseActivity implements BaseNetDataBiz.RequestListener{
@@ -209,28 +212,11 @@ public class MainActivity extends BaseActivity implements BaseNetDataBiz.Request
             intent_template = new Intent(MainActivity.this, DownTemplateService.class);
             startService(intent_template);
         }
-
-//        if (task_check == null) {
-//            task_check=new TimerTask() {
-//                @Override
-//                public void run() {
-//                    List<FileInfo> maxPriInfos = FileSqlTool.getInstance().getMaxPriInfos(0);
-//                    if (maxPriInfos.size() > 0) {
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                if (isNetworkConnected(MainActivity.this)) {
-//                                    if (dialog_tip == null) {
-//                                        showDownloadDialog("有需要更新的媒资文件");
-//                                    }
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//            };
-//            timer_check.schedule(task_check,10000,5000);
-//        }
+        List<XmlDownInfo> allInfos = XmlSqlTool.getInstance(this).getAllInfos();
+        Log.e("我的文件的个数", allInfos.size() + "");
+        for (XmlDownInfo info : allInfos) {
+            Log.e("我的xml info", info.toString());
+        }
     }
 
     public AlertDialog dialog_tip;
